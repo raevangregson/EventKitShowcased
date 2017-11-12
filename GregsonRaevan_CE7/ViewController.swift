@@ -108,7 +108,7 @@ class ViewController: UIViewController, EKCalendarChooserDelegate, EKEventEditVi
         eventVC.eventStore = eventStore
         eventVC.editViewDelegate = self
         let ident  = eventVC.event?.calendarItemIdentifier
-        if calIdentifier == eventStore.defaultCalendarForNewEvents.calendarIdentifier{
+        if calIdentifier == eventStore.defaultCalendarForNewEvents?.calendarIdentifier{
             defIdentifiers.append(ident!)
         }else{
             eventIdentifiers.append(ident!)
@@ -117,9 +117,9 @@ class ViewController: UIViewController, EKCalendarChooserDelegate, EKEventEditVi
         
         present(eventVC, animated: true, completion: nil)
         //this is where I set what calendar is selected when the user brings up the add event controller so it populates with whatever they have chosen with the calendar chooser, defaults to the default cal if they haven't created one, or defaults to there custom calendar if they've created one but haven't used the calendar chooser yet to switch between calendars
-        if calIdentifier == eventStore.defaultCalendarForNewEvents.calendarIdentifier || calIdentifier == ""{
+        if calIdentifier == eventStore.defaultCalendarForNewEvents?.calendarIdentifier || calIdentifier == ""{
             eventVC.event?.calendar = eventStore.defaultCalendarForNewEvents
-            calIdentifier = eventStore.defaultCalendarForNewEvents.calendarIdentifier
+            calIdentifier = (eventStore.defaultCalendarForNewEvents?.calendarIdentifier)!
         }
         else{
             eventVC.event?.calendar = eventStore.calendar(withIdentifier: calIdentifier)!
@@ -162,7 +162,7 @@ class ViewController: UIViewController, EKCalendarChooserDelegate, EKEventEditVi
     //this function is used to delete all events for the particular calendar they are on
     @IBAction func deleteEvents(_ sender: UIButton) {
         //First I differentiate if the user wants to delete events to default cal or their own created cal by checking what the calendar identifier is, then in both I loop through there reserved event ident arrays and remove each value both from the calendar and the array, I remove from the calendar using the same calendar item identifier I saved with.
-        if calIdentifier == eventStore.defaultCalendarForNewEvents.calendarIdentifier{
+        if calIdentifier == eventStore.defaultCalendarForNewEvents?.calendarIdentifier{
             for value in defIdentifiers{
                 do{
                     try eventStore.remove(eventStore.calendarItem(withIdentifier: value) as! EKEvent, span: EKSpan.thisEvent, commit: true)
